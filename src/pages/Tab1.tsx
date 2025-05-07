@@ -21,7 +21,6 @@ import EditDilemmaModal from "../components/editDilemmaModal";
 import NewDilemmaModal from "../components/newDilemmaModal";
 import { StatusBar, Style } from '@capacitor/status-bar';
 
-
 const Tab1: React.FC = () => {
     const [colors, setColors] = useState<ColorPicker[]>(colorOptions);
     const [selectedColor, setSelectedColor] = useState("");
@@ -42,6 +41,28 @@ const Tab1: React.FC = () => {
     const editDilemmaModal = useRef<HTMLIonModalElement>(null);
 
 
+
+    const configureStatusBar = async () => {
+        try {
+            // Hintergrundfarbe auf schwarz setzen
+            await StatusBar.setBackgroundColor({ color: '#000000' });
+
+            // Symbole immer dunkel (schwarz)
+            await StatusBar.setStyle({ style: Style.Dark });
+
+            // Statusleiste sichtbar machen
+            await StatusBar.show();
+        } catch (error) {
+            console.error('Error configuring StatusBar:', error);
+        }
+    };
+
+
+
+
+
+
+
     useEffect(() => {
             const fetchUserData = async () => {
                 const storedUser: UserData | null = await store.get('user');
@@ -50,6 +71,7 @@ const Tab1: React.FC = () => {
                 }
             }
             fetchUserData();
+            configureStatusBar()
         }
     )
 
@@ -206,18 +228,6 @@ const Tab1: React.FC = () => {
     }
 
 
-    useEffect(() => {
-        const configureStatusBar = async () => {
-            try {
-                await StatusBar.setBackgroundColor({ color: '#000000' }); // Schwarz
-                await StatusBar.setStyle({ style: Style.Dark }); // Schwarzer Text
-            } catch (error) {
-                console.error("Error configuring StatusBar:", error);
-            }
-        };
-
-        configureStatusBar();
-    }, []); // Leerer Array: nur beim ersten Rendern aufrufen
 
 
 
@@ -225,14 +235,14 @@ const Tab1: React.FC = () => {
 
         <IonPage>
 
-            <IonToolbar style={{marginTop: "calc(var(--status-bar-height) + 15px)"}}>
-{/*                <div style={{width:'100%', height:'var(--status-bar-height)', backgroundColor:'lightgray'}}>
+            <IonToolbar style={{marginTop: "0px"}}>
+                <div style={{width:'100%', height:'var(--status-bar-height)', backgroundColor:'lightgray'}}>
 
-                </div>*/}
-                <IonTitle style={{marginTop: "15px"}}>Dilemmata</IonTitle>
+                </div>
+                <IonTitle style={{marginTop: "25px"}}>Dilemmata</IonTitle>
                 <div className="vertical-line"></div>
             </IonToolbar>
-            <IonContent>
+            <IonContent style={{marginBottom:'5px'}}>
                 {userData?.dilemmata.map(dilemma => (
                     <IonItem key={dilemma.id} lines="none" className="dilemma-item"
                              style={{"--background": dilemma.color}}>
